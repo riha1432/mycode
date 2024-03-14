@@ -1,0 +1,2 @@
+#python3 manage.py runserver 실행 8080 0.0.0.0:8080
+#django-admin startproject 파일 명 만들기

@@ -1,0 +1,51 @@
+<!-- <html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>rtspplay</title>
+</head>
+<body>
+    <img id="img">
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var img = document.getElementById('img'),
+        socket = io('');
+    socket.on('data', function(data) {
+        img.src = 'data:image/jpeg;base64,' + data;
+    });
+</script> 
+</body>
+</html> -->
+<!DOCTYPE html>
+<html>
+<head>
+<title>RTSP Stream Player</title>
+</head>
+<body>
+<video id="videoPlayer" autoplay controls></video>
+<script>
+const videoPlayer = document.getElementById('videoPlayer');
+const socket = new WebSocket('ws://localhost:3000'); // WebSocket 서버 주소
+// WebSocket으로부터 데이터를 받았을 때 처리하는 부분
+socket.onmessage = function(event) {
+if (event.data instanceof Blob) {
+const blob = event.data;
+const mediaSource = new MediaSource();
+// MediaSource 초기화 완료 시 호출되는 이벤트 핸들러
+mediaSource.addEventListener('sourceopen', function() {
+const sourceBuffer = mediaSource.addSourceBuffer('video/mp4; codecs="mp4a.40.2,avc1.64001E"');
+// Blob 데이터를 ArrayBuffer로 변환하여 SourceBuffer에 추가
+const fileReader = new FileReader();
+fileReader.onload = function() {
+sourceBuffer.appendBuffer(this.result);
+};
+fileReader.readAsArrayBuffer(blob);
+});
+// 비디오 요소에 MediaSource 연결
+videoPlayer.src = URL.createObjectURL(mediaSource);
+}
+};
+</script>
+</body>
+</html
